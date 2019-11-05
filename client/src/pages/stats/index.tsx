@@ -1,5 +1,5 @@
 import './index.less';
-import { formatTime } from '../../utils';
+import { formatTime, getDayCn } from '../../utils';
 import '@tarojs/async-await';
 import { ScrollView, Text, View } from '@tarojs/components';
 import Taro, { Component, Config } from '@tarojs/taro';
@@ -36,22 +36,24 @@ export default class Index extends Component<{}, State> {
   componentWillMount () { }
 
   componentDidMount () {
-    this.getListData()
   }
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
+  componentDidShow () {
+    this.getListData()
+  }
 
   componentDidHide () { }
 
   render () {
     return (
       <ScrollView scrollY={true} className="list">
-        {this.state.list.map((item: ListItem, index: number) => (
-          <View key={index}>
-            <Text>{item.date}</Text>
-            <Text>{formatTime(new Date(item.timestamp))}</Text>
+        {this.state.list.map((item: ListItem) => (
+          <View className="list__item" key={item.date}>
+            <Text className="list__item__date">{item.date}</Text>
+            <Text className="list__item__day">{getDayCn(new Date(item.timestamp))}</Text>
+            <Text className="list__item__time">{formatTime(new Date(item.timestamp))}</Text>
           </View>
         ))}
       </ScrollView>
