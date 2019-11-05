@@ -35,13 +35,13 @@ class App extends Component {
       list: [
         {
           pagePath: 'pages/index/index',
-          text: '首页',
+          text: '打卡',
           iconPath: 'img/home.png',
           selectedIconPath: 'img/home.png'
         },
         {
           pagePath: 'pages/stats/index',
-          text: '日志',
+          text: '数据',
           iconPath: 'img/stats.png',
           selectedIconPath: 'img/stats.png'
         }

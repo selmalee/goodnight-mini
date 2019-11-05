@@ -1,14 +1,21 @@
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
 
-
-exports.main = async () => {
+const db = cloud.database()
+exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
-  console.log(wxContext)
-  return {
-    openid: wxContext.OPENID,
-    appid: wxContext.APPID,
-    unionid: wxContext.UNIONID,
+  try {
+    const result = await db
+      .collection('night_records')
+      .where({
+        openid: wxContext.OPENID
+      })
+      .get()
+    return result.data
+  } catch(e) {
+    return false
   }
 }

@@ -1,8 +1,19 @@
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
-import './index.less'
+import './index.less';
+import { formatTime } from '../../utils';
+import '@tarojs/async-await';
+import { ScrollView, Text, View } from '@tarojs/components';
+import Taro, { Component, Config } from '@tarojs/taro';
 
-export default class Index extends Component {
+interface ListItem {
+  date: string,
+  timestamp: number
+}
+
+interface State {
+  list: ListItem[]
+}
+
+export default class Index extends Component<{}, State> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -12,12 +23,21 @@ export default class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '数据'
+  }
+
+  constructor() {
+    super()
+    this.state = {
+      list: []
+    }
   }
 
   componentWillMount () { }
 
-  componentDidMount () { }
+  componentDidMount () {
+    this.getListData()
+  }
 
   componentWillUnmount () { }
 
@@ -27,8 +47,45 @@ export default class Index extends Component {
 
   render () {
     return (
-      <View className='index'>
-      </View>
+      <ScrollView scrollY={true} className="list">
+        {this.state.list.map((item: ListItem, index: number) => (
+          <View key={index}>
+            <Text>{item.date}</Text>
+            <Text>{formatTime(new Date(item.timestamp))}</Text>
+          </View>
+        ))}
+      </ScrollView>
     )
+  }
+
+  async getListData() {
+    Taro.showLoading()
+    try {
+      const resp = await Taro
+        .cloud
+        .callFunction({
+          name: "list"
+        })
+      console.log(resp)
+      if (resp.result) {
+        this.setState({
+          list: resp.result
+        })
+      } else {
+        Taro.showToast({
+          title: '获取数据失败，请稍后再试',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    } catch(e) {
+      console.error(e.toString())
+      Taro.showToast({
+        title: '获取数据出错，请联系管理员',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+    Taro.hideLoading()
   }
 }
