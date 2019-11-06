@@ -68,7 +68,7 @@ export default class Index extends Component<{}, State> {
         .callFunction({
           name: "list"
         })
-      console.log(resp)
+      // console.log(resp)
       if (resp.result) {
         this.setState({
           list: resp.result
