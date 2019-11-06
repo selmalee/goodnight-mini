@@ -72,7 +72,7 @@ export default class Index extends Component<{}, State> {
         content: `已过凌晨，选择记录日期为今天（${formatDate(now)}）还是昨天（${formatDate(yesterday)}）?`,
         confirmText: '今天',
         cancelText: '昨天',
-        success (res) {
+        success: (res) => {
           if (res.confirm) {
             this.addRecord(now)
           } else if (res.cancel) {
@@ -86,7 +86,7 @@ export default class Index extends Component<{}, State> {
         content: '非正常人类睡眠时间，确认要打卡?',
         confirmText: '确定',
         cancelText: '取消',
-        success (res) {
+        success: (res) => {
           if (res.confirm) {
             this.addRecord(now)
           }
@@ -112,6 +112,7 @@ export default class Index extends Component<{}, State> {
           }
         })
       if (resp) {
+        console.log(resp)
         Taro.showToast({
           title: '打卡成功',
           icon: 'success'
