@@ -15,6 +15,14 @@ export default class Index extends Component<{}, State> {
     navigationBarTitleText: '打卡'
   }
 
+  onShareAppMessage () {
+    return {
+      title: '晚安打卡，告别熬夜～',
+      path: '/pages/index/index'
+    }
+  }
+
+  private interval:NodeJS.Timeout
   private dayMap = {
     1: '一',
     2: '二',
@@ -36,14 +44,16 @@ export default class Index extends Component<{}, State> {
   componentWillMount () { }
 
   componentDidMount () {
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.setState({
         time: new Date()
       })
-    })
+    }, 1000)
   }
 
-  componentWillUnmount () { }
+  componentWillUnmount () {
+    clearInterval(this.interval)
+  }
 
   componentDidShow () { }
 
@@ -61,7 +71,7 @@ export default class Index extends Component<{}, State> {
       </View>
     )
   }
-
+  // 处理点击按钮
   handleClick() {
     const now = new Date()
     const hour = now.getHours()
@@ -96,7 +106,7 @@ export default class Index extends Component<{}, State> {
       this.addRecord(now)
     }
   }
-
+  // 打卡
   async addRecord(date: Date) {
     this.setState({
       loading: true

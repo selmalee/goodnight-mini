@@ -54,6 +54,25 @@ class App extends Component {
     if (process.env.TARO_ENV === 'weapp') {
       Taro.cloud.init()
     }
+    // 强制更新
+    // wx.getUpdateManager 在 1.9.90 才可用，请注意兼容
+    const updateManager = Taro.getUpdateManager()
+    updateManager.onUpdateReady(function () {
+      Taro.showModal({
+        title:'更新提示',
+        content:'新版本已经准备好，是否马上重启小程序？',
+        success:function (res) {
+          if (res.confirm) {
+            // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+            updateManager.applyUpdate()
+          }
+        }
+      })
+    })
+    updateManager.onUpdateFailed(function () {
+      // 新的版本下载失败
+      console.error('小程序的新版本下载失败')
+    })
   }
 
   componentDidShow () {}

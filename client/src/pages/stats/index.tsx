@@ -49,13 +49,16 @@ export default class Index extends Component<{}, State> {
   render () {
     return (
       <ScrollView scrollY={true} className="list">
-        {this.state.list.map((item: ListItem) => (
-          <View className="list__item" key={item.date}>
-            <Text className="list__item__date">{item.date}</Text>
-            <Text className="list__item__day">{getDayCn(new Date(item.timestamp))}</Text>
-            <Text className="list__item__time">{formatTime(new Date(item.timestamp))}</Text>
-          </View>
-        ))}
+        {this.state.list.map((item: ListItem) => {
+          const nowDate = new Date(item.timestamp)
+          return (
+            <View className="list__item" key={item.date}>
+              <Text className="list__item__date">{item.date}</Text>
+              <Text className={'list__item__day' + ((nowDate.getDay() === 0 || nowDate.getDay() === 6) ? ' list__item__day_weekend' : '')}>{getDayCn(nowDate)}</Text>
+              <Text className="list__item__time">{formatTime(nowDate)}</Text>
+            </View>
+          )
+        })}
       </ScrollView>
     )
   }
