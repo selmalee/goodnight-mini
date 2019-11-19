@@ -1,4 +1,4 @@
-import './index.less';
+import './history.less';
 import { formatTime, getDayCn } from '../../utils';
 import '@tarojs/async-await';
 import { ScrollView, Text, View } from '@tarojs/components';
@@ -13,7 +13,7 @@ interface State {
   list: ListItem[]
 }
 
-export default class Index extends Component<{}, State> {
+export default class History extends Component<{}, State> {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -23,14 +23,7 @@ export default class Index extends Component<{}, State> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '数据'
-  }
-
-  onShareAppMessage () {
-    return {
-      title: '晚安打卡，告别熬夜～',
-      path: '/pages/index/index'
-    }
+    navigationBarTitleText: '历史数据'
   }
 
   constructor() {

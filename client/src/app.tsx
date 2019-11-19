@@ -22,6 +22,8 @@ class App extends Component {
     pages: [
       'pages/index/index',
       'pages/stats/index',
+      'pages/stats/history',
+      'pages/user/index',
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -42,6 +44,12 @@ class App extends Component {
         {
           pagePath: 'pages/stats/index',
           text: '数据',
+          iconPath: 'img/stats.png',
+          selectedIconPath: 'img/stats.png'
+        },
+        {
+          pagePath: 'pages/user/index',
+          text: '我的',
           iconPath: 'img/stats.png',
           selectedIconPath: 'img/stats.png'
         }
