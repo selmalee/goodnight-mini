@@ -7,14 +7,19 @@ cloud.init({
 const db = cloud.database()
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
+  const dateWhere = event.date ? {
+    $regex: '.*' + event.date,
+    $options: 'i'
+  } : undefined
   try {
     const result = await db
       .collection('night_records')
       .where({
-        openid: wxContext.OPENID
+        openid: wxContext.OPENID,
+        date: dateWhere
       })
       .get()
-    return result.data
+    return result.data.sort((a, b) => b.timestamp - a.timestamp) // 倒序
   } catch(e) {
     return false
   }

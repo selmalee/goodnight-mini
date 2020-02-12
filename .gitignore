@@ -5,3 +5,4 @@ client/.rn_temp/
 **/node_modules/
 .DS_Store
 yarn.lock
+*.log

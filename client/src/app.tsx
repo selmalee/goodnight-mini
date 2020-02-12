@@ -1,4 +1,4 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import Index from './pages/index'
 
 import './app.less'
@@ -10,53 +10,6 @@ import './app.less'
 // }
 
 class App extends Component {
-
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
-    pages: [
-      'pages/index/index',
-      'pages/stats/index',
-      'pages/stats/history',
-      'pages/user/index',
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    },
-    tabBar: {
-      color: '#555',
-      selectedColor: '#000',
-      list: [
-        {
-          pagePath: 'pages/index/index',
-          text: '打卡',
-          iconPath: 'img/home.png',
-          selectedIconPath: 'img/home.png'
-        },
-        {
-          pagePath: 'pages/stats/index',
-          text: '数据',
-          iconPath: 'img/stats.png',
-          selectedIconPath: 'img/stats.png'
-        },
-        {
-          pagePath: 'pages/user/index',
-          text: '我的',
-          iconPath: 'img/stats.png',
-          selectedIconPath: 'img/stats.png'
-        }
-      ]
-    },
-    cloud: true
-  }
 
   componentDidMount () {
     if (process.env.TARO_ENV === 'weapp') {
@@ -88,6 +41,58 @@ class App extends Component {
   componentDidHide () {}
 
   componentDidCatchError () {}
+
+  /**
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
+  config: Taro.Config = {
+    pages: [
+      'pages/index/index',
+      'pages/stats/index',
+      'pages/stats/history',
+      'pages/user/index',
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#8a8a8a',
+      selectedColor: '#000',
+      list: [
+        {
+          pagePath: 'pages/index/index',
+          text: '打卡',
+          iconPath: 'img/home.png',
+          selectedIconPath: 'img/home-active.png'
+        },
+        {
+          pagePath: 'pages/stats/index',
+          text: '数据',
+          iconPath: 'img/stats.png',
+          selectedIconPath: 'img/stats-active.png'
+        },
+        // {
+        //   pagePath: 'pages/user/index',
+        //   text: '我的',
+        //   iconPath: 'img/user.png',
+        //   selectedIconPath: 'img/user-active.png'
+        // }
+      ]
+    },
+    cloud: true
+  }
+
+  // 全局变量
+  globalData = {
+    isUpdate: false
+  }
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数

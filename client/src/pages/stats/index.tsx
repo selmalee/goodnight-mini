@@ -1,8 +1,13 @@
-import './index.less';
-import { formatTime, getDayCn } from '../../utils';
 import '@tarojs/async-await';
-import { ScrollView, Text, View } from '@tarojs/components';
-import Taro, { Component, Config } from '@tarojs/taro';
+import {
+  Picker,
+  ScrollView,
+  Text,
+  View
+  } from '@tarojs/components';
+import Taro, { Component } from '@tarojs/taro';
+import './index.less';
+import { formatDate, formatTime, getDayCn } from '../../utils';
 
 interface ListItem {
   date: string,
@@ -10,19 +15,42 @@ interface ListItem {
 }
 
 interface State {
-  list: ListItem[]
+  list: ListItem[],
+  date: string,
+  isLoading: boolean
 }
 
 export default class Index extends Component<{}, State> {
 
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
+  constructor() {
+    super()
+    this.state = {
+      list: [],
+      date: formatDate(new Date(), 'YYYY-MM'),
+      isLoading: false
+    }
+  }
+
+  componentWillMount () { }
+
+  componentDidMount () {
+    this.getListData()
+  }
+
+  componentWillUnmount () { }
+
+  componentDidShow () {
+    // 新打卡，重新获取数据
+    console.log(Taro.getApp().globalData)
+    if (Taro.getApp().globalData.isUpdate && !this.state.isLoading) {
+      this.getListData()
+      Taro.getApp().globalData.isUpdate = false
+    }
+  }
+
+  componentDidHide () { }
+
+  config: Taro.Config = {
     navigationBarTitleText: '数据'
   }
 
@@ -33,50 +61,19 @@ export default class Index extends Component<{}, State> {
     }
   }
 
-  constructor() {
-    super()
-    this.state = {
-      list: []
-    }
-  }
-
-  componentWillMount () { }
-
-  componentDidMount () {
-  }
-
-  componentWillUnmount () { }
-
-  componentDidShow () {
-    this.getListData()
-  }
-
-  componentDidHide () { }
-
-  render () {
-    return (
-      <ScrollView scrollY={true} className="list">
-        {this.state.list.map((item: ListItem) => {
-          const nowDate = new Date(item.timestamp)
-          return (
-            <View className="list__item" key={item.date}>
-              <Text className="list__item__date">{item.date}</Text>
-              <Text className={'list__item__day' + ((nowDate.getDay() === 0 || nowDate.getDay() === 6) ? ' list__item__day_weekend' : '')}>{getDayCn(nowDate)}</Text>
-              <Text className="list__item__time">{formatTime(nowDate)}</Text>
-            </View>
-          )
-        })}
-      </ScrollView>
-    )
-  }
-
   async getListData() {
+    this.setState({
+      isLoading: true
+    })
     Taro.showLoading()
     try {
       const resp = await Taro
         .cloud
         .callFunction({
-          name: "list"
+          name: 'list',
+          data: {
+            date: this.state.date
+          }
         })
       // console.log(resp)
       if (resp.result) {
@@ -99,5 +96,41 @@ export default class Index extends Component<{}, State> {
       })
     }
     Taro.hideLoading()
+    this.setState({
+      isLoading: true
+    })
+  }
+
+  handleCHangeDate(e) {
+    this.setState({
+      date: e.target.value
+    }, this.getListData)
+  }
+
+  render () {
+    return (
+      <View>
+        <Picker mode='date' value={this.state.date} fields='month' end={formatDate(new Date())} onChange={this.handleCHangeDate} className='picker'>
+          <Text className='picker__button'>选择月份</Text>
+          <Text className='picker__date'>{this.state.date}</Text>
+        </Picker>
+        <ScrollView scrollY className='list'>
+          {
+            this.state.list.length > 0 ?
+            this.state.list.map((item: ListItem) => {
+              const nowDate = new Date(item.timestamp)
+              return (
+                <View className='list__item' key={item.date}>
+                  <Text className='list__item__date'>{item.date}</Text>
+                  <Text className={'list__item__day' + ((nowDate.getDay() === 0 || nowDate.getDay() === 6) ? ' list__item__day_weekend' : '')}>{getDayCn(nowDate)}</Text>
+                  <Text className='list__item__time'>{formatTime(nowDate)}</Text>
+                </View>
+              )
+            }) :
+            <View className='list__msg'>暂无数据</View>
+          }
+        </ScrollView>
+      </View>
+    )
   }
 }

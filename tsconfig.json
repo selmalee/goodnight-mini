@@ -20,13 +20,13 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": [
-      "node_modules/@types",
+      "client/node_modules/@types",
       "global.d.ts"
     ]
   },
   "exclude": [
-    "node_modules",
-    "dist"
+    "client/node_modules",
+    "client/dist"
   ],
   "compileOnSave": false
 }

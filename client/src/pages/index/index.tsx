@@ -1,4 +1,4 @@
-import Taro, { Component, Config } from '@tarojs/taro'
+import Taro, { Component } from '@tarojs/taro'
 import { View, Text, Button } from '@tarojs/components'
 import '@tarojs/async-await'
 import './index.less'
@@ -10,28 +10,6 @@ interface State {
 }
 
 export default class Index extends Component<{}, State> {
-
-  config: Config = {
-    navigationBarTitleText: '打卡'
-  }
-
-  onShareAppMessage () {
-    return {
-      title: '晚安打卡，告别熬夜～',
-      path: '/pages/index/index'
-    }
-  }
-
-  private interval:NodeJS.Timeout
-  private dayMap = {
-    1: '一',
-    2: '二',
-    3: '三',
-    4: '四',
-    5: '五',
-    6: '六',
-    7: '日'
-  }
 
   constructor() {
     super()
@@ -55,22 +33,32 @@ export default class Index extends Component<{}, State> {
     clearInterval(this.interval)
   }
 
+  private interval: NodeJS.Timeout
+  private dayMap = {
+    1: '一',
+    2: '二',
+    3: '三',
+    4: '四',
+    5: '五',
+    6: '六',
+    7: '日'
+  }
+
   componentDidShow () { }
 
   componentDidHide () { }
 
-  render () {
-    return (
-      <View className="index">
-        <View className="index__time">{formatTime(this.state.time)}</View>
-        <View className="index__date">
-          <Text>{formatDate(new Date(this.state.time))}</Text>
-          <Text className="index__date__day">周{this.dayMap[this.state.time.getDay()]}</Text>
-        </View>
-        <Button className="index__button" onClick={this.handleClick} loading={this.state.loading}>晚安</Button>
-      </View>
-    )
+  config: Taro.Config = {
+    navigationBarTitleText: '打卡'
   }
+
+  onShareAppMessage () {
+    return {
+      title: '晚安打卡，告别熬夜～',
+      path: '/pages/index/index'
+    }
+  }
+
   // 处理点击按钮
   handleClick() {
     const now = new Date()
@@ -115,18 +103,18 @@ export default class Index extends Component<{}, State> {
       const resp = await Taro
         .cloud
         .callFunction({
-          name: "record",
+          name: 'record',
           data: {
             time: date.getTime(),
             date: formatDate(date)
           }
         })
       if (resp) {
-        console.log(resp)
         Taro.showToast({
           title: '打卡成功',
           icon: 'success'
         })
+        Taro.getApp().globalData.isUpdate = true
       } else {
         Taro.showToast({
           title: '打卡失败，请稍后再试',
@@ -145,5 +133,18 @@ export default class Index extends Component<{}, State> {
     this.setState({
       loading: false
     })
+  }
+
+  render () {
+    return (
+      <View className='index'>
+        <View className='index__time'>{formatTime(this.state.time)}</View>
+        <View className='index__date'>
+          <Text>{formatDate(new Date(this.state.time))}</Text>
+          <Text className='index__date__day'>周{this.dayMap[this.state.time.getDay()]}</Text>
+        </View>
+        <Button className='index__button' onClick={this.handleClick} loading={this.state.loading}>晚安</Button>
+      </View>
+    )
   }
 }
