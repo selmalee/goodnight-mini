@@ -41,7 +41,6 @@ export default class Index extends Component<{}, State> {
 
   componentDidShow () {
     // 新打卡，重新获取数据
-    console.log(Taro.getApp().globalData, this.state.isLoading)
     if (Taro.getApp().globalData.isUpdate && !this.state.isLoading) {
       this.getListData()
       Taro.getApp().globalData.isUpdate = false

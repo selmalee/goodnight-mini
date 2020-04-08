@@ -1,15 +1,19 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, OpenData, Navigator } from '@tarojs/components'
+import { View, OpenData, Textarea, Button, Form } from '@tarojs/components'
 import '@tarojs/async-await'
 import './index.less'
 
-interface State {}
+interface State {
+  suggestion: string
+}
 
 export default class Index extends Component<{}, State> {
 
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      suggestion: ''
+    }
   }
 
   componentWillMount () { }
@@ -23,7 +27,7 @@ export default class Index extends Component<{}, State> {
   componentDidHide () { }
 
   config: Taro.Config = {
-    navigationBarTitleText: '我的'
+    navigationBarTitleText: '建议'
   }
 
   onShareAppMessage () {
@@ -33,6 +37,10 @@ export default class Index extends Component<{}, State> {
     }
   }
 
+  handleSubmit() {
+
+  }
+
   render () {
     return (
       <View className='user'>
@@ -40,9 +48,10 @@ export default class Index extends Component<{}, State> {
           <OpenData className='user__info__avator' type='userAvatarUrl'></OpenData>
           <OpenData className='user__info__name' type='userNickName'></OpenData>
         </View>
-        <View className='user__menu'>
-          <Navigator url='https://github.com/seminelee/goodnight-mini/issues' className='user__menu__item' hover-class='navigator-hover'>去github提需求</Navigator>
-        </View>
+        <Form onSubmit={this.handleSubmit}>
+          <Textarea value={this.state.suggestion} placeholder="form 中的 textarea" name="textarea"/>
+          <Button form-type="submit"> 提交 </Button>
+        </Form>
       </View>
     )
   }
