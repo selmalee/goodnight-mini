@@ -43,7 +43,6 @@ export default class IndexMusic extends Component<{}, State> {
       // this.audioCtx = Taro.getBackgroundAudioManager()
       this.audioCtx.src = music.src
       this.audioCtx.title = music.name
-      this.audioCtx.play()
       this.audioCtx.onError((res) => {
         Taro.showToast({
           title: '播放异常：' + res.errMsg,
